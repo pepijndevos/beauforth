@@ -1,15 +1,15 @@
 clj
 (beauforth.core/define ":*"
   (fn []
-    (let [w (beauforth.core/word) exp (read)]
+    (let [w (beauforth.core/word)
+          exp (read)]
       (beauforth.core/define w
         (fn [] (eval exp))))))
 
 :* : (let [w (beauforth.core/word)]
-       (print "subroutine ")
-       (println w)
+       (println "subroutine" (munge w))
        (println "push(returnstack, nextword)")
-       (beauforth.core/define w #(println "subcall" w "nextword")))
+       (beauforth.core/define w #(beauforth.core/println-to-main "subcall" (munge w) "nextword")))
 
 :* ; (do
        (println "pop(returnstack, nextword)")

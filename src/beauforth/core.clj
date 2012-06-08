@@ -26,15 +26,30 @@
 (defn define [sym f]
   (swap! definitions conj [sym f]))
 
+(let [main (new java.io.StringWriter)]
+  (defn println-to-main [& s]
+    (binding [*out* main]
+      (apply println s)))
+
+  (defn print-main []
+    (println "thread main")
+    (println "arrinit datastack.data 0 32")
+    (println "arrinit returnstack.data 0 32")
+    (println (str main))
+    (println "endt")))
+
 (define "clj" (comp eval read))
 
 (defn evaluate [s]
   (if-let [f (lookup s)]
     (f)
-    (println "push(datastack," s ")")))
+    (println-to-main "push(datastack," s ")")))
 
 (defn -main
   "I don't do a whole lot."
   [& args]
+  (println "#include \"forthlib.nbc\"")
   (doseq [w (wordseq)]
-    (evaluate w)))
+    (evaluate w))
+  (print-main))
+

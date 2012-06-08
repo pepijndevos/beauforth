@@ -24,20 +24,3 @@ dseg ends
 #define pop(stack, val) \
   sub stack.offset stack.offset 1 \
   index val stack.data stack.offset
-
-
-thread main
-  arrinit datastack.data 0 32
-  arrinit returnstack.data 0 32
-
-  push(datastack, 1)
-  push(datastack, 2)
-  push(datastack, 9)
-  push(datastack, 7)
-  callword(even)
-
-  pop(datastack, number)
-  NumOut(0,0,number)
-
-  wait 5000
-endt
