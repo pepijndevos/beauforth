@@ -18,24 +18,34 @@ clj
 
 :* nbc (println (read-line))
 
+: dot
+nbc pop(datastack, val1)
+nbc NumOut(0, 0, val1)
+;
+
+: sleep
+nbc pop(datastack, val1)
+nbc Wait(val1)
+;
+
 : +
 nbc pop(datastack, val1)
 nbc pop(datastack, val2)
-nbc add val1, val2, val3
+nbc add val3, val1, val2
 nbc push(datastack, val3)
 ;
 
 : -
 nbc pop(datastack, val1)
 nbc pop(datastack, val2)
-nbc sub val1, val2, val3
+nbc sub val3, val1, val2
 nbc push(datastack, val3)
 ;
 
 : *
 nbc pop(datastack, val1)
 nbc pop(datastack, val2)
-nbc mul val1, val2, val3
+nbc mul val3, val1, val2
 nbc push(datastack, val3)
 ;
 
@@ -45,4 +55,5 @@ nbc push(datastack, val1)
 nbc push(datastack, val1)
 ;
 
-1 dup *
+2 dup * dot
+1000 sleep
