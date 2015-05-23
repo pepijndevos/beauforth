@@ -7,53 +7,32 @@ clj
         (fn [] (eval exp))))))
 
 :* : (let [w (beauforth.core/word)]
-       (println "subroutine" (munge w))
-       (println "push(returnstack, nextword)")
-       (beauforth.core/define w #(beauforth.core/println-to-main "subcall" (munge w) "nextword")))
+       (println (str (munge w) ":"))
+       (beauforth.core/define w #(beauforth.core/println-to-main "rcall" (munge w))))
 
-:* ; (do
-       (println "pop(returnstack, nextword)")
-       (println "subret nextword")
-       (println "ends"))
+:* ; (println "ret\n")
 
-:* nbc (println (read-line))
-
-: dot
-nbc pop(datastack, val1)
-nbc NumOut(0, 0, val1)
-;
-
-: sleep
-nbc pop(datastack, val1)
-nbc Wait(val1)
-;
+:* asm (println (read-line))
 
 : +
-nbc pop(datastack, val1)
-nbc pop(datastack, val2)
-nbc add val3, val1, val2
-nbc push(datastack, val3)
-;
-
-: -
-nbc pop(datastack, val1)
-nbc pop(datastack, val2)
-nbc sub val3, val1, val2
-nbc push(datastack, val3)
-;
-
-: *
-nbc pop(datastack, val1)
-nbc pop(datastack, val2)
-nbc mul val3, val1, val2
-nbc push(datastack, val3)
+asm bf_pop(r16)
+asm bf_pop(r17)
+asm add r16, r17
+asm bf_push(r16)
 ;
 
 : dup
-nbc pop(datastack, val1)
-nbc push(datastack, val1)
-nbc push(datastack, val1)
+asm bf_pop(r16)
+asm bf_push(r16)
+asm bf_push(r16)
 ;
 
-2 dup * dot
-1000 sleep
+: led
+asm bf_pop(r16)
+asm cpi r16, 10
+asm brne loop
+
+asm sbi _SFR_IO_ADDR(DDRD),6
+asm sbi _SFR_IO_ADDR(PORTD),6
+
+5 dup + led

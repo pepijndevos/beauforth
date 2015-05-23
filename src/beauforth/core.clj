@@ -32,23 +32,23 @@
       (apply println s)))
 
   (defn print-main []
-    (println "thread main")
-    (println "arrinit datastack.data 0 32")
-    (println "arrinit returnstack.data 0 32")
+    (println "thread:")
     (println (str main))
-    (println "endt")))
+    (println "loop: rjmp loop")))
 
 (define "clj" (comp eval read))
 
 (defn evaluate [s]
   (if-let [f (lookup s)]
     (f)
-    (println-to-main "push(datastack," s ")")))
+    (do
+      (println-to-main "ldi r16," s)
+      (println-to-main "bf_push(r16)"))))
 
 (defn -main
   "I don't do a whole lot."
   [& args]
-  (println "#include \"forthlib.nbc\"")
+  (println "#include \"forth/forthlib.S\"")
   (doseq [w (wordseq)]
     (evaluate w))
   (print-main))
